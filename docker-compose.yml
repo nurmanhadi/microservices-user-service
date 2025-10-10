@@ -1,0 +1,48 @@
+services:
+  user-service-db:
+    image: docker.io/library/postgres:latest
+    container_name: user-service-db
+    hostname: user-service-db
+    environment:
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_DATABASE}
+    ports:
+      - "5432:5432"
+    networks:
+      - user-service
+    volumes:
+      - data:/var/lib/postgresql/data/
+    restart: always
+
+  # user-service-prometheus:
+  #   image: docker.io/prom/prometheus:latest
+  #   container_name: user-service-prometheus
+  #   hostname: user-service-prometheus
+  #   ports:
+  #     - "9090:9090"
+  #   volumes:
+  #     - ./prometheus.yml:/etc/prometheus/prometheus.yml
+  #   networks:
+  #     - user-service
+  #   command:
+  #     - "--config.file=/etc/prometheus/prometheus.yml"
+  #   extra_hosts:
+  #     - "host.docker.internal:host-gateway"
+
+  # user-service-grafana:
+  #   image: docker.io/grafana/grafana:latest
+  #   container_name: user-service-grafana
+  #   hostname: user-service-grafana
+  #   ports:
+  #     - "3000:3000"
+  #   volumes:
+  #     - data:/var/lib/grafana
+  #   networks:
+  #     - user-service
+
+networks:
+  user-service:
+    driver: bridge
+volumes:
+  data:
