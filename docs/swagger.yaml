@@ -12,6 +12,40 @@ definitions:
     - email
     - password
     type: object
+  dto.UserUpdateProfileRequest:
+    properties:
+      first_name:
+        maxLength: 100
+        type: string
+      last_name:
+        maxLength: 100
+        type: string
+      phone:
+        maxLength: 20
+        type: string
+    type: object
+  dto.UserUpdateStatusRequest:
+    properties:
+      status:
+        allOf:
+        - $ref: '#/definitions/enum.STATUS'
+        enum:
+        - active
+        - inactive
+        - banned
+    required:
+    - status
+    type: object
+  enum.STATUS:
+    enum:
+    - active
+    - inactive
+    - banned
+    type: string
+    x-enum-varnames:
+    - STATUS_ACTIVE
+    - STATUS_INACTIVE
+    - STATUS_BANNED
 info:
   contact: {}
   description: This is a user service API server
@@ -63,6 +97,91 @@ paths:
       summary: Register new user
       tags:
       - auth
+  /profiles:
+    get:
+      description: Get all registered users
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Get all users
+      tags:
+      - profiles
+  /profiles/{id}:
+    get:
+      description: Get a user detail by ID
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Not Found
+      summary: Get user by ID
+      tags:
+      - profiles
+    put:
+      consumes:
+      - application/json
+      description: Update user profile
+      parameters:
+      - description: User update profile data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UserUpdateProfileRequest'
+      - description: User id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+      summary: Update profile
+      tags:
+      - profiles
+  /profiles/{id}/status:
+    put:
+      consumes:
+      - application/json
+      description: Update user account status (active, inactive, banned)
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: User status data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UserUpdateStatusRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+      summary: Update user status by ID
+      tags:
+      - profiles
 schemes:
 - http
 - https
