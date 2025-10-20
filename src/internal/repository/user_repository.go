@@ -88,29 +88,34 @@ func (r *userRepository) UpdateStatusByID(id string, status string) error {
 	return err
 }
 func (r *userRepository) UpdateProfile(id string, user entity.User) error {
-	query := "UPDATE users SET "
+	setClauses := []string{}
+	args := []interface{}{}
+	argPos := 1
 	if user.FirstName != nil {
-		query += fmt.Sprintf("first_name = '%s',", *user.FirstName)
+		setClauses = append(setClauses, fmt.Sprintf("first_name = $%d", argPos))
+		args = append(args, *user.FirstName)
+		argPos++
 	}
 	if user.LastName != nil {
-		query += fmt.Sprintf("last_name = '%s',", *user.LastName)
+		setClauses = append(setClauses, fmt.Sprintf("last_name = $%d", argPos))
+		args = append(args, *user.LastName)
+		argPos++
 	}
 	if user.Phone != nil {
-		query += fmt.Sprintf("phone = '%s',", *user.Phone)
+		setClauses = append(setClauses, fmt.Sprintf("phone = $%d", argPos))
+		args = append(args, *user.Phone)
+		argPos++
 	}
-	newQuery := strings.TrimSuffix(query, ",")
-	finalQuery := fmt.Sprintf("%s WHERE id = $1", newQuery)
-
-	stmt, err := r.db.Prepare(finalQuery)
-	if err != nil {
-		return err
+	if len(setClauses) == 0 {
+		return nil
 	}
-	defer stmt.Close()
-	_, err = stmt.Exec(id)
-	if err != nil {
-		return err
-	}
-	return nil
+	query := fmt.Sprintf("UPDATE users SET %s WHERE id = $%d",
+		strings.Join(setClauses, ", "),
+		argPos,
+	)
+	args = append(args, id)
+	_, err := r.db.Exec(query, args...)
+	return err
 }
 func (r *userRepository) CountByID(id string) (int, error) {
 	var count int
