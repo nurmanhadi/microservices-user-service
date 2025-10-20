@@ -4,10 +4,14 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+	"user-service/pkg/enum"
 	"user-service/pkg/response"
+	"user-service/pkg/security"
+	"user-service/src/config/env"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
+	"github.com/golang-jwt/jwt/v5"
 )
 
 func ErrorHandling() gin.HandlerFunc {
@@ -42,5 +46,30 @@ func ErrorHandling() gin.HandlerFunc {
 				return
 			}
 		}
+	}
+}
+func JwtValidation(role []enum.ROLE) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		authHeader := ctx.GetHeader("Authorization")
+		if authHeader == "" || !strings.HasPrefix(authHeader, "Bearer ") {
+			response.Except(401, "missing or invalid authorization token")
+			return
+		}
+		tokenString := strings.TrimPrefix(authHeader, "Bearer ")
+		token, err := jwt.Parse(tokenString, func(t *jwt.Token) (any, error) {
+			return []byte(env.CONF.JWT.Access.Secret), nil
+		})
+		if err != nil || !token.Valid {
+			response.Except(401, "invalid or expired token")
+			return
+		}
+		claims := token.Claims.(security.JwtClaims)
+		for _, x := range role {
+			if claims.Role != x {
+				response.Except(403, "insufficient role")
+				return
+			}
+		}
+		ctx.Next()
 	}
 }

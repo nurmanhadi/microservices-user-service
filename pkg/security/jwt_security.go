@@ -3,6 +3,7 @@ package security
 import (
 	"sync"
 	"time"
+	"user-service/pkg/enum"
 	"user-service/src/config/env"
 	"user-service/src/dto"
 
@@ -10,12 +11,12 @@ import (
 )
 
 type JwtClaims struct {
-	UserID string `json:"user_id"`
-	Role   string `json:"role"`
+	UserID string    `json:"user_id"`
+	Role   enum.ROLE `json:"role"`
 	jwt.RegisteredClaims
 }
 
-func JwtGenerateToken(userID, role string) (*dto.AuthResponse, error) {
+func JwtGenerateToken(userID string, role enum.ROLE) (*dto.AuthResponse, error) {
 	var wg sync.WaitGroup
 	var accessTokenString, refreshTokenString string
 	var accessErr, refreshErr error

@@ -1,7 +1,9 @@
 package routes
 
 import (
+	"user-service/pkg/enum"
 	"user-service/src/rest/handler"
+	"user-service/src/rest/middleware"
 
 	"github.com/gin-gonic/gin"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
@@ -24,8 +26,16 @@ func (r *RouteHandler) Setup() {
 	auth.POST("/login", r.AuthHandler.LoginUser)
 
 	profile := user.Group("/profiles")
-	profile.GET("/", r.UserHandler.GetAllUsers)
-	profile.PUT("/:id", r.UserHandler.UpdateProfile)
-	profile.GET("/:id", r.UserHandler.GetUserByID)
-	profile.PUT("/:id/status", r.UserHandler.UpdateStatusByID)
+	profile.GET("/",
+		middleware.JwtValidation([]enum.ROLE{enum.ROLE_ADMIN}),
+		r.UserHandler.GetAllUsers)
+	profile.PUT("/:id",
+		middleware.JwtValidation([]enum.ROLE{enum.ROLE_ADMIN, enum.ROLE_USER}),
+		r.UserHandler.UpdateProfile)
+	profile.GET("/:id",
+		middleware.JwtValidation([]enum.ROLE{enum.ROLE_ADMIN, enum.ROLE_USER}),
+		r.UserHandler.GetUserByID)
+	profile.PUT("/:id/status",
+		middleware.JwtValidation([]enum.ROLE{enum.ROLE_ADMIN}),
+		r.UserHandler.UpdateStatusByID)
 }

@@ -48,7 +48,5 @@ func NewValidator() *validator.Validate {
 func NewRouter() *gin.Engine {
 	r := gin.Default()
 	r.Use(middleware.ErrorHandling())
-	r.Use(middleware.MetricHttpRequest())
-	r.Use(middleware.MetricHttpLatency())
 	return r
 }
