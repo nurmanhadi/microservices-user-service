@@ -46,6 +46,7 @@ func (h *userHandler) UpdateProfile(ctx *gin.Context) {
 	err := h.userService.UpdateProfile(id, *request)
 	if err != nil {
 		ctx.Error(err)
+		return
 	}
 	response.Success(ctx, 200, "OK")
 }

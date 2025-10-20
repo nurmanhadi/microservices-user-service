@@ -13,13 +13,13 @@ type LoginResponse struct {
 	UserID string `json:"user_id"`
 }
 type UserName struct {
-	FirstName string `json:"first_name"`
-	LastName  string `json:"last_name"`
+	FirstName *string `json:"first_name"`
+	LastName  *string `json:"last_name"`
 }
 type UserResponse struct {
 	Id        string      `json:"id"`
 	Name      UserName    `json:"name"`
-	Phone     string      `json:"phone"`
+	Phone     *string     `json:"phone"`
 	Email     string      `json:"email"`
 	Role      enum.ROLE   `json:"role"`
 	Status    enum.STATUS `json:"status"`

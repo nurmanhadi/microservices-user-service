@@ -7,9 +7,9 @@ import (
 
 type User struct {
 	Id        string      `db:"id"`
-	FirstName string      `db:"first_name"`
-	LastName  string      `db:"last_name"`
-	Phone     string      `db:"phone"`
+	FirstName *string     `db:"first_name"`
+	LastName  *string     `db:"last_name"`
+	Phone     *string     `db:"phone"`
 	Email     string      `db:"email"`
 	Role      enum.ROLE   `db:"role"`
 	Status    enum.STATUS `db:"status"`

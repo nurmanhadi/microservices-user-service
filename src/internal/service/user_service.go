@@ -57,9 +57,9 @@ func (s *userService) UpdateProfile(id string, request dto.UserUpdateProfileRequ
 		}
 	}
 	user := &entity.User{
-		FirstName: *request.FirstName,
-		LastName:  *request.LastName,
-		Phone:     *request.Phone,
+		FirstName: request.FirstName,
+		LastName:  request.LastName,
+		Phone:     request.Phone,
 	}
 	if err := s.userRepository.UpdateProfile(id, *user); err != nil {
 		s.logger.WithError(err).Error("failed to user update profile")

@@ -89,19 +89,19 @@ func (r *userRepository) UpdateStatusByID(id string, status string) error {
 }
 func (r *userRepository) UpdateProfile(id string, user entity.User) error {
 	query := "UPDATE users SET "
-	if user.FirstName != "" {
-		query += fmt.Sprintf("first_name = %s,", user.FirstName)
+	if user.FirstName != nil {
+		query += fmt.Sprintf("first_name = '%s',", *user.FirstName)
 	}
-	if user.LastName != "" {
-		query += fmt.Sprintf("last_name = %s,", user.LastName)
+	if user.LastName != nil {
+		query += fmt.Sprintf("last_name = '%s',", *user.LastName)
 	}
-	if user.Phone != "" {
-		query += fmt.Sprintf("phone = %s,", user.Phone)
+	if user.Phone != nil {
+		query += fmt.Sprintf("phone = '%s',", *user.Phone)
 	}
 	newQuery := strings.TrimSuffix(query, ",")
-	finaQuery := fmt.Sprintf("%s WHERE id = $1", newQuery)
+	finalQuery := fmt.Sprintf("%s WHERE id = $1", newQuery)
 
-	stmt, err := r.db.Prepare(finaQuery)
+	stmt, err := r.db.Prepare(finalQuery)
 	if err != nil {
 		return err
 	}
