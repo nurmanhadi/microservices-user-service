@@ -29,7 +29,7 @@ func NewUserRepository(db *sqlx.DB) UserRepository {
 	}
 }
 func (r *userRepository) Insert(user entity.User) error {
-	_, err := r.db.Exec("INSERT INTO users(id, email, password) VALUES($1, $2, $3)", user.Id, user.Email, user.Password)
+	_, err := r.db.Exec("INSERT INTO users(id, email, password, role, status) VALUES($1, $2, $3, $4, $5)", user.Id, user.Email, user.Password, user.Role, user.Status)
 	if err != nil {
 		return err
 	}

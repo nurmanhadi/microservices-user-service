@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"strings"
+	"user-service/pkg/enum"
 	"user-service/pkg/response"
 	"user-service/pkg/security"
 	"user-service/src/dto"
@@ -58,6 +59,8 @@ func (s *authService) RegisterUser(request dto.UserRequest) error {
 		Id:       newID,
 		Email:    newEmail,
 		Password: string(hashPassword),
+		Role:     enum.ROLE_USER,
+		Status:   enum.STATUS_ACTIVE,
 	}
 	if err := s.userRepository.Insert(*user); err != nil {
 		s.logger.WithError(err).Error("failed to insert new user")
