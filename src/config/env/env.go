@@ -17,9 +17,19 @@ type dbConfig struct {
 	MaxPoolConns int
 	MaxLifetime  int
 }
-
+type jwtConfig struct {
+	Access struct {
+		Secret string
+		Exp    int
+	}
+	Refresh struct {
+		Secret string
+		Exp    int
+	}
+}
 type envConfig struct {
-	DB dbConfig
+	DB  dbConfig
+	JWT jwtConfig
 }
 
 var CONF envConfig
@@ -37,7 +47,24 @@ func NewEnv() {
 		MaxPoolConns: envAsInt(os.Getenv("DB_MAX_POOL_CONNS"), 10),
 		MaxLifetime:  envAsInt(os.Getenv("DB_CONN_MAX_LIFETIME"), 300),
 	}
+	envJwt := jwtConfig{
+		Access: struct {
+			Secret string
+			Exp    int
+		}{
+			Secret: os.Getenv("JWT_ACCESS_SECRET"),
+			Exp:    envAsInt(os.Getenv("JWT_ACCESS_EXP"), 15),
+		},
+		Refresh: struct {
+			Secret string
+			Exp    int
+		}{
+			Secret: os.Getenv("JWT_REFRESH_SECRET"),
+			Exp:    envAsInt(os.Getenv("JWT_REFRESH_EXP"), 7),
+		},
+	}
 	CONF.DB = envDB
+	CONF.JWT = envJwt
 }
 
 func envAsInt(value string, defaultValue int) int {

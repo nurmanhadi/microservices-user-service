@@ -8,17 +8,17 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type UserHandler interface {
+type AuthHandler interface {
 	RegisterUser(ctx *gin.Context)
 	LoginUser(ctx *gin.Context)
 }
-type userHandler struct {
-	userService service.UserService
+type authHandler struct {
+	authService service.AuthService
 }
 
-func NewUserHandler(userService service.UserService) UserHandler {
-	return &userHandler{
-		userService: userService,
+func NewAuthHandler(authService service.AuthService) AuthHandler {
+	return &authHandler{
+		authService: authService,
 	}
 }
 
@@ -32,13 +32,13 @@ func NewUserHandler(userService service.UserService) UserHandler {
 // @Success 201
 // @Failure 400
 // @Router /auth/register [post]
-func (h *userHandler) RegisterUser(ctx *gin.Context) {
+func (h *authHandler) RegisterUser(ctx *gin.Context) {
 	request := new(dto.UserRequest)
 	if err := ctx.ShouldBind(&request); err != nil {
 		ctx.Error(response.Except(400, err.Error()))
 		return
 	}
-	err := h.userService.RegisterUser(*request)
+	err := h.authService.RegisterUser(*request)
 	if err != nil {
 		ctx.Error(err)
 		return
@@ -56,13 +56,13 @@ func (h *userHandler) RegisterUser(ctx *gin.Context) {
 // @Success 200
 // @Failure 400
 // @Router /auth/login [post]
-func (h *userHandler) LoginUser(ctx *gin.Context) {
+func (h *authHandler) LoginUser(ctx *gin.Context) {
 	request := new(dto.UserRequest)
 	if err := ctx.ShouldBind(&request); err != nil {
 		ctx.Error(response.Except(400, err.Error()))
 		return
 	}
-	result, err := h.userService.LoginUser(*request)
+	result, err := h.authService.LoginUser(*request)
 	if err != nil {
 		ctx.Error(err)
 		return

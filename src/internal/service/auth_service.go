@@ -5,6 +5,7 @@ import (
 	"errors"
 	"strings"
 	"user-service/pkg/response"
+	"user-service/pkg/security"
 	"user-service/src/dto"
 	"user-service/src/internal/entity"
 	"user-service/src/internal/repository"
@@ -15,24 +16,24 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-type UserService interface {
+type AuthService interface {
 	RegisterUser(request dto.UserRequest) error
-	LoginUser(request dto.UserRequest) (*dto.LoginResponse, error)
+	LoginUser(request dto.UserRequest) (*dto.AuthResponse, error)
 }
-type userService struct {
+type authService struct {
 	logger         *logrus.Logger
 	validation     *validator.Validate
 	userRepository repository.UserRepository
 }
 
-func NewUserService(logger *logrus.Logger, validation *validator.Validate, userRepository repository.UserRepository) UserService {
-	return &userService{
+func NewAuthService(logger *logrus.Logger, validation *validator.Validate, userRepository repository.UserRepository) AuthService {
+	return &authService{
 		logger:         logger,
 		validation:     validation,
 		userRepository: userRepository,
 	}
 }
-func (s *userService) RegisterUser(request dto.UserRequest) error {
+func (s *authService) RegisterUser(request dto.UserRequest) error {
 	if err := s.validation.Struct(&request); err != nil {
 		s.logger.WithError(err).Warn("validation failed during user registration")
 		return err
@@ -68,7 +69,7 @@ func (s *userService) RegisterUser(request dto.UserRequest) error {
 	}).Info("user registered successfully")
 	return nil
 }
-func (s *userService) LoginUser(request dto.UserRequest) (*dto.LoginResponse, error) {
+func (s *authService) LoginUser(request dto.UserRequest) (*dto.AuthResponse, error) {
 	if err := s.validation.Struct(&request); err != nil {
 		s.logger.WithError(err).Warn("validation failed during user login")
 		return nil, err
@@ -88,9 +89,10 @@ func (s *userService) LoginUser(request dto.UserRequest) (*dto.LoginResponse, er
 		s.logger.WithError(err).Warn("email or password wrong")
 		return nil, response.Except(400, "email or password wrong")
 	}
-	resp := &dto.LoginResponse{
-		UserID: user.Id,
+	resp, err := security.JwtGenerateToken(user.Id)
+	if err != nil {
+		s.logger.WithError(err).Error("failed to generate token jwt")
+		return nil, err
 	}
-	s.logger.WithField("user_id", user.Id).Info("user successfuly login")
 	return resp, nil
 }

@@ -24,15 +24,15 @@ func Setup(deps *DependenciesConfig) {
 	userRepo := repository.NewUserRepository(deps.DB)
 
 	// service
-	userServ := service.NewUserService(deps.Logger, deps.Validation, userRepo)
+	authServ := service.NewAuthService(deps.Logger, deps.Validation, userRepo)
 
 	// handler
-	userHand := handler.NewUserHandler(userServ)
+	authHand := handler.NewAuthHandler(authServ)
 
 	// routes
 	route := &routes.RouteHandler{
 		Router:      deps.Router,
-		UserHandler: userHand,
+		AuthHandler: authHand,
 	}
 	route.Setup()
 }

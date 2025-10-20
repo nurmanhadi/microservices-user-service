@@ -9,7 +9,7 @@ import (
 
 type RouteHandler struct {
 	Router      *gin.Engine
-	UserHandler handler.UserHandler
+	AuthHandler handler.AuthHandler
 }
 
 func (r *RouteHandler) Setup() {
@@ -18,6 +18,6 @@ func (r *RouteHandler) Setup() {
 
 	user := api.Group("/users")
 	auth := user.Group("/auth")
-	auth.POST("/register", r.UserHandler.RegisterUser)
-	auth.POST("/login", r.UserHandler.LoginUser)
+	auth.POST("/register", r.AuthHandler.RegisterUser)
+	auth.POST("/login", r.AuthHandler.LoginUser)
 }
