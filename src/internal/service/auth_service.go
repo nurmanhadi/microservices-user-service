@@ -92,7 +92,7 @@ func (s *authService) LoginUser(request dto.UserRequest) (*dto.AuthResponse, err
 		s.logger.WithError(err).Warn("email or password wrong")
 		return nil, response.Except(400, "email or password wrong")
 	}
-	resp, err := security.JwtGenerateToken(user.Id)
+	resp, err := security.JwtGenerateToken(user.Id, string(user.Role))
 	if err != nil {
 		s.logger.WithError(err).Error("failed to generate token jwt")
 		return nil, err
