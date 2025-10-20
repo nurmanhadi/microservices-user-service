@@ -1,0 +1,8 @@
+README.md
+LICENSE.md
+.env
+.git
+.gitignore
+docker-compose.yml
+build
+run-docker.sh
