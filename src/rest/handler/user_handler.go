@@ -30,8 +30,9 @@ func NewUserHandler(userService service.UserService) UserHandler {
 // @Tags profiles
 // @Accept json
 // @Produce json
-// @Param request body dto.UserUpdateProfileRequest true "User update profile data"
+// @Param Authorization header string true "Bearer access token"
 // @Param id path string true "User id"
+// @Param request body dto.UserUpdateProfileRequest true "User update profile data"
 // @Success 200
 // @Failure 400
 // @Failure 404
@@ -56,6 +57,7 @@ func (h *userHandler) UpdateProfile(ctx *gin.Context) {
 // @Description Get a user detail by ID
 // @Tags profiles
 // @Produce json
+// @Param Authorization header string true "Bearer access token"
 // @Param id path string true "User ID"
 // @Success 200
 // @Failure 404
@@ -75,6 +77,7 @@ func (h *userHandler) GetUserByID(ctx *gin.Context) {
 // @Description Get all registered users
 // @Tags profiles
 // @Produce json
+// @Param Authorization header string true "Bearer access token"
 // @Success 200
 // @Router /profiles [get]
 func (h *userHandler) GetAllUsers(ctx *gin.Context) {
@@ -92,6 +95,7 @@ func (h *userHandler) GetAllUsers(ctx *gin.Context) {
 // @Tags profiles
 // @Accept json
 // @Produce json
+// @Param Authorization header string true "Bearer access token"
 // @Param id path string true "User ID"
 // @Param request body dto.UserUpdateStatusRequest true "User status data"
 // @Success 200
