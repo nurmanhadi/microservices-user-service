@@ -21,6 +21,17 @@ func NewUserHandler(userService service.UserService) UserHandler {
 		userService: userService,
 	}
 }
+
+// RegisterUser godoc
+// @Summary Register new user
+// @Description Register a new user account
+// @Tags auth
+// @Accept json
+// @Produce json
+// @Param request body dto.UserRequest true "User registration data"
+// @Success 201
+// @Failure 400
+// @Router /auth/register [post]
 func (h *userHandler) RegisterUser(ctx *gin.Context) {
 	request := new(dto.UserRequest)
 	if err := ctx.ShouldBind(&request); err != nil {
@@ -34,6 +45,17 @@ func (h *userHandler) RegisterUser(ctx *gin.Context) {
 	}
 	response.Success(ctx, 201, "OK")
 }
+
+// LoginUser godoc
+// @Summary Register user
+// @Description Login a user account
+// @Tags auth
+// @Accept json
+// @Produce json
+// @Param request body dto.UserRequest true "User login data"
+// @Success 200
+// @Failure 400
+// @Router /auth/login [post]
 func (h *userHandler) LoginUser(ctx *gin.Context) {
 	request := new(dto.UserRequest)
 	if err := ctx.ShouldBind(&request); err != nil {

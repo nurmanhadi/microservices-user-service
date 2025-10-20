@@ -17,6 +17,7 @@ func (r *RouteHandler) Setup() {
 	api := r.Router.Group("/api")
 
 	user := api.Group("/users")
-	user.POST("/register", r.UserHandler.RegisterUser)
-	user.POST("/login", r.UserHandler.LoginUser)
+	auth := user.Group("/auth")
+	auth.POST("/register", r.UserHandler.RegisterUser)
+	auth.POST("/login", r.UserHandler.LoginUser)
 }
