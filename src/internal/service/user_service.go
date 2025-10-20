@@ -4,10 +4,10 @@ import (
 	"database/sql"
 	"errors"
 	"strings"
-	"user-service/dto"
-	"user-service/internal/model"
-	"user-service/internal/repository"
 	"user-service/pkg/response"
+	"user-service/src/dto"
+	"user-service/src/internal/entity"
+	"user-service/src/internal/repository"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/google/uuid"
@@ -53,7 +53,7 @@ func (s *userService) RegisterUser(request dto.UserRequest) error {
 		return err
 	}
 	newID := uuid.NewString()
-	user := &model.User{
+	user := &entity.User{
 		Id:       newID,
 		Email:    newEmail,
 		Password: string(hashPassword),

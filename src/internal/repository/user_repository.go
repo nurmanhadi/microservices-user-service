@@ -1,14 +1,14 @@
 package repository
 
 import (
-	"user-service/internal/model"
+	"user-service/src/internal/entity"
 
 	"github.com/jmoiron/sqlx"
 )
 
 type UserRepository interface {
-	Insert(user model.User) error
-	FindByEmail(email string) (*model.User, error)
+	Insert(user entity.User) error
+	FindByEmail(email string) (*entity.User, error)
 	CountByEmail(email string) (int64, error)
 }
 type userRepository struct {
@@ -20,15 +20,15 @@ func NewUserRepository(db *sqlx.DB) UserRepository {
 		db: db,
 	}
 }
-func (r *userRepository) Insert(user model.User) error {
+func (r *userRepository) Insert(user entity.User) error {
 	_, err := r.db.Exec("INSERT INTO users(id, email, password) VALUES($1, $2, $3)", user.Id, user.Email, user.Password)
 	if err != nil {
 		return err
 	}
 	return nil
 }
-func (r *userRepository) FindByEmail(email string) (*model.User, error) {
-	var user model.User
+func (r *userRepository) FindByEmail(email string) (*entity.User, error) {
+	var user entity.User
 	err := r.db.Get(&user, "SELECT * FROM users WHERE email = $1", email)
 	if err != nil {
 		return nil, err

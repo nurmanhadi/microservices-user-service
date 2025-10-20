@@ -1,4 +1,4 @@
-package config
+package env
 
 import (
 	"os"
@@ -22,7 +22,7 @@ type envConfig struct {
 	DB dbConfig
 }
 
-var ENV envConfig
+var CONF envConfig
 
 func NewEnv() {
 	godotenv.Load()
@@ -37,7 +37,7 @@ func NewEnv() {
 		MaxPoolConns: envAsInt(os.Getenv("DB_MAX_POOL_CONNS"), 10),
 		MaxLifetime:  envAsInt(os.Getenv("DB_CONN_MAX_LIFETIME"), 300),
 	}
-	ENV.DB = envDB
+	CONF.DB = envDB
 }
 
 func envAsInt(value string, defaultValue int) int {

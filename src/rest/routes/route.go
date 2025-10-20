@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"user-service/handler"
+	"user-service/src/rest/handler"
 
 	"github.com/gin-gonic/gin"
 	"github.com/prometheus/client_golang/prometheus/promhttp"

@@ -1,14 +1,14 @@
 package main
 
 import (
-	"user-service/config"
-	"user-service/database"
+	"user-service/src/config"
+	"user-service/src/config/env"
 )
 
 func main() {
-	config.NewEnv()
+	env.NewEnv()
 	logger := config.NewLogger()
-	db := database.NewSql()
+	db := config.NewSql()
 	validation := config.NewValidator()
 	router := config.NewRouter()
 	config.Setup(&config.DependenciesConfig{
@@ -18,7 +18,7 @@ func main() {
 		Router:     router,
 	})
 
-	err := router.Run("0.0.0.0:8080")
+	err := router.Run(":4000")
 	if err != nil {
 		logger.Fatalf("failed run server: %s", err.Error())
 	}

@@ -1,10 +1,10 @@
 package config
 
 import (
-	"user-service/handler"
-	"user-service/internal/repository"
-	"user-service/internal/service"
-	"user-service/routes"
+	"user-service/src/internal/repository"
+	"user-service/src/internal/service"
+	"user-service/src/rest/handler"
+	"user-service/src/rest/routes"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"

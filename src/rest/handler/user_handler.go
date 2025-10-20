@@ -1,9 +1,9 @@
 package handler
 
 import (
-	"user-service/dto"
-	"user-service/internal/service"
 	"user-service/pkg/response"
+	"user-service/src/dto"
+	"user-service/src/internal/service"
 
 	"github.com/gin-gonic/gin"
 )
